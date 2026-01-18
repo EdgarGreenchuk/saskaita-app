@@ -1,0 +1,233 @@
+/* Public Invoice - Clean, minimal design */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+.public-actions {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.print-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.print-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Invoice document - reuse styles from invoice-print.css */
+.invoice-document {
+    background: white;
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    color: #333;
+}
+
+.invoice-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #C9941A;
+}
+
+.invoice-header h1 {
+    font-size: 2em;
+    color: #2C1810;
+    margin-bottom: 10px;
+}
+
+.invoice-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-info-item strong {
+    color: #C9941A;
+}
+
+.parties-section {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.party-box {
+    flex: 1;
+    background: #FFF9E6;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #C9941A;
+}
+
+.party-box h3 {
+    color: #C9941A;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.party-box p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+}
+
+.items-table th {
+    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.items-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+.items-table tbody tr:hover {
+    background: #FFF5E1;
+}
+
+.totals-section {
+    float: right;
+    width: 350px;
+    margin-top: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.total-row.grand-total {
+    font-size: 1.3em;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 3px solid #C9941A;
+    color: #C9941A;
+}
+
+.invoice-footer {
+    clear: both;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.public-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    color: #666;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .invoice-document {
+        box-shadow: none;
+        margin: 0;
+        padding: 15mm;
+    }
+    
+    .invoice-header {
+        border-bottom: 2px solid #000;
+    }
+    
+    .invoice-header h1 {
+        color: black;
+    }
+    
+    .party-box {
+        background: white;
+        border: 1px solid #000;
+    }
+    
+    .party-box h3 {
+        color: black;
+        border-bottom: 1px solid #000;
+        padding-bottom: 5px;
+    }
+    
+    .items-table th {
+        background: #f0f0f0;
+        color: black;
+        border: 1px solid #000;
+    }
+    
+    .items-table td {
+        border: 1px solid #000;
+    }
+    
+    .total-row.grand-total {
+        color: black;
+        border-top: 2px solid #000;
+    }
+    
+    @page {
+        margin: 10mm;
+    }
+/* Sąskaitos datos juodos spalvos */
+    .invoice-info,
+    .invoice-info-item,
+    .invoice-info-item p,
+    .invoice-info-item strong {
+        color: black !important;
+    }
+    
+    /* Paslepia ikoneles */
+    .party-box h3::before {
+        content: '' !important;
+    }
+    
+    .party-box h3 {
+        font-family: 'Segoe UI', sans-serif !important;
+    }
+}

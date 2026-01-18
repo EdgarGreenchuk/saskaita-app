@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sukurti Sąskaitą</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/invoice-form.css">
+    <link rel="stylesheet" href="../css/modal.css">
+</head>
+<body>
+    <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
+    
+    <header>
+        <h1>📄 Sukurti PVM Sąskaitą Faktūrą</h1>
+        <p>Užpildykite duomenis ir sukurkite sąskaitą</p>
+    </header>
+
+   <nav>
+    <a href="../index.html" class="nav-btn">🏠 Pradžia</a>
+    <a href="dashboard.html" class="nav-btn">📊 Dashboard</a>
+    <a href="products.html" class="nav-btn">📦 Produktai</a>
+    <a href="clients.html" class="nav-btn">👥 Klientai</a>
+    <a href="invoices.html" class="nav-btn">📋 Sąskaitos</a>
+    <a href="create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
+</nav>
+
+    <main>
+        <form id="invoice-form">
+            <!-- Pagrindinė informacija -->
+            <section class="form-section">
+                <h2>📋 Sąskaitos Informacija</h2>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="invoice_number">Sąskaitos numeris *</label>
+                        <input type="text" id="invoice_number" required placeholder="pvz: SF-2026-001">
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="invoice_date">Sąskaitos data *</label>
+                        <input type="date" id="invoice_date" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="due_date">Mokėjimo terminas *</label>
+                        <input type="date" id="due_date" required>
+                    </div>
+                </div>
+            </section>
+
+           <!-- Klientas -->
+            <section class="form-section">
+                <h2>👥 Klientas</h2>
+                
+                <div style="display: flex; gap: 10px; align-items: end;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="client_id">Pasirinkite klientą *</label>
+                        <select id="client_id" required>
+                            <option value="">-- Pasirinkite klientą --</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn" onclick="openAddClientModal()" style="margin-bottom: 20px;">+ Naujas Klientas</button>
+                </div>
+
+                <div id="client-details" style="display: none; padding: 15px; background: #E8D5C4; border-radius: 5px; margin-top: 10px;">
+                    <p><strong>Įmonė:</strong> <span id="client-company"></span></p>
+                    <p><strong>Kodas:</strong> <span id="client-code"></span></p>
+                    <p><strong>PVM:</strong> <span id="client-vat"></span></p>
+                    <p><strong>Adresas:</strong> <span id="client-address"></span></p>
+                </div>
+            </section>
+
+             <!-- Prekės -->
+            <section class="form-section">
+                <h2>📦 Prekės / Paslaugos</h2>
+                
+                <div id="items-container"></div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn" id="add-item-btn">+ Pridėti Prekę</button>
+                    <button type="button" class="btn" onclick="openAddProductModal()">+ Naujas Produktas</button>
+                </div>
+            </section>
+
+            <!-- Transportavimas -->
+            <section class="form-section">
+                <h2>🚚 Transportavimas</h2>
+                
+                <div class="form-group">
+                    <label for="shipping_price">Transportavimo kaina (EUR)</label>
+                    <input type="number" id="shipping_price" step="0.01" min="0" value="0">
+                </div>
+            </section>
+
+            <!-- Sumos -->
+            <section class="form-section totals-section">
+                <h2>💰 Sumos</h2>
+                
+                <div class="totals-display">
+                    <div class="total-row">
+                        <span>Suma be PVM:</span>
+                        <strong id="subtotal-display">0.00 €</strong>
+                    </div>
+                    <div class="total-row">
+                        <span>PVM (21%):</span>
+                        <strong id="vat-display">0.00 €</strong>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>VISO SU PVM:</span>
+                        <strong id="total-display">0.00 €</strong>
+                    </div>
+                </div>
+            </section>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn" style="font-size: 1.3em; padding: 15px 50px;">
+                    ✅ Sukurti Sąskaitą
+                </button>
+            </div>
+        </form>
+    </main>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModals()"></div>
+
+    <!-- Add Client Modal -->
+    <div class="modal" id="add-client-modal">
+        <button class="modal-close" onclick="closeModals()">×</button>
+        <h2>Naujas Klientas</h2>
+        
+        <form id="quick-add-client-form">
+            <div class="form-group">
+                <label for="modal-company-name">Įmonės pavadinimas *</label>
+                <input type="text" id="modal-company-name" required>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-company-code">Įmonės kodas</label>
+                    <input type="text" id="modal-company-code">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-vat-code">PVM kodas</label>
+                    <input type="text" id="modal-vat-code">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-address">Adresas</label>
+                <input type="text" id="modal-address">
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 2;">
+                    <label for="modal-city">Miestas</label>
+                    <input type="text" id="modal-city">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-postal-code">Pašto kodas</label>
+                    <input type="text" id="modal-postal-code">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-email">El. paštas</label>
+                    <input type="email" id="modal-email">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-phone">Telefonas</label>
+                    <input type="tel" id="modal-phone">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="closeModals()" style="background: #999;">Atšaukti</button>
+                <button type="submit" class="btn">Išsaugoti Klientą</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="add-product-modal">
+        <button class="modal-close" onclick="closeModals()">×</button>
+        <h2>Naujas Produktas</h2>
+        
+        <form id="quick-add-product-form">
+            <div class="form-group">
+                <label for="modal-product-name">Produkto pavadinimas *</label>
+                <input type="text" id="modal-product-name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-product-description">Aprašymas</label>
+                <textarea id="modal-product-description" rows="3"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 2;">
+                    <label for="modal-product-price">Kaina (EUR) *</label>
+                    <input type="number" id="modal-product-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="modal-product-unit">Vienetas</label>
+                    <select id="modal-product-unit">
+                        <option value="vnt">vnt</option>
+                        <option value="kg">kg</option>
+                        <option value="m">m</option>
+                        <option value="m²">m²</option>
+                        <option value="val">val</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="closeModals()" style="background: #999;">Atšaukti</button>
+                <button type="submit" class="btn">Išsaugoti Produktą</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>© 2026 Edgar's Invoice System</p>
+    </footer>
+
+    <script src="../js/create-invoice.js"></script>
+    <script src="../js/dark-mode.js"></script>
+</body>
+</html>

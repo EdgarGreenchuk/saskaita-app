@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVM Sąskaita Faktūra</title>
+    <link rel="stylesheet" href="../css/public-invoice.css">
+    <link rel="stylesheet" href="../css/eg-signature.css">
+</head>
+<body>
+    <div class="public-actions no-print">
+        <button onclick="window.print()" class="print-btn">🖨️ Spausdinti Sąskaitą</button>
+    </div>
+
+    <main id="invoice-container">
+        <div class="loading">Kraunama...</div>
+    </main>
+
+    <footer class="no-print public-footer">
+        <p>Sąskaita sugeneruota Edgar's Invoice System</p>
+        <p style="font-size: 0.85em; color: #999;">Jei turite klausimų, susisiekite su pardavėju</p>
+    </footer>
+
+    <script src="../js/public-invoice.js"></script>
+</body>
+</html>

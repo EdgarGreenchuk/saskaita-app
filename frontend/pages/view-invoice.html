@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sąskaita Faktūra</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/invoice-print.css">
+    <link rel="stylesheet" href="../css/eg-signature.css">
+</head>
+<body>
+    <button class="dark-mode-toggle no-print" id="dark-mode-toggle">🌙</button>
+    
+    <nav class="no-print">
+        <a href="../index.html" class="nav-btn">🏠 Pradžia</a>
+        <a href="invoices.html" class="nav-btn">📋 Atgal į Sąrašą</a>
+        <button onclick="editInvoice()" class="nav-btn">✏️ Redaguoti</button>
+        <button onclick="deleteInvoice()" class="nav-btn btn-danger">🗑️ Trinti</button>
+        <button onclick="window.print()" class="nav-btn">🖨️ Spausdinti</button>
+        <button onclick="copyPublicLink()" class="nav-btn">🔗 Kopijuoti Viešą Nuorodą</button>
+    </nav>
+
+    <main id="invoice-container">
+        <div class="loading">Kraunama...</div>
+    </main>
+
+    <footer class="no-print">
+        <p>© 2026 Edgar's Invoice System</p>
+    </footer>
+
+    <script src="../js/view-invoice.js"></script>
+    <script src="../js/dark-mode.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Statistika</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <!-- Chart.js biblioteka -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
+    
+    <header>
+        <h1>📊 Dashboard</h1>
+        <p>Verslo statistika ir analizė</p>
+    </header>
+
+    <nav>
+    <a href="../index.html" class="nav-btn">🏠 Pradžia</a>
+    <a href="dashboard.html" class="nav-btn">📊 Dashboard</a>
+    <a href="products.html" class="nav-btn">📦 Produktai</a>
+    <a href="clients.html" class="nav-btn">👥 Klientai</a>
+    <a href="invoices.html" class="nav-btn">📋 Sąskaitos</a>
+    <a href="create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
+</nav>
+
+    <main>
+    <!-- KPI Korteles -->
+    <section class="kpi-section">
+        <div class="kpi-card kpi-revenue">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-content">
+                <h3 id="total-revenue">0 €</h3>
+                <p>Bendros pajamos</p>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-unpaid">
+            <div class="kpi-icon">⏰</div>
+            <div class="kpi-content">
+                <h3 id="unpaid-revenue">0 €</h3>
+                <p>Neapmokėtos sąskaitos</p>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-invoices">
+            <div class="kpi-icon">📋</div>
+            <div class="kpi-content">
+                <h3 id="total-invoices">0</h3>
+                <p>Viso sąskaitų</p>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-clients">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-content">
+                <h3 id="total-clients">0</h3>
+                <p>Aktyvūs klientai</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity - PIRMA -->
+    <section class="activity-section">
+        <h2>🕐 Naujausia veikla</h2>
+        <div id="recent-activity">Kraunama...</div>
+    </section>
+
+    <!-- Grafikai - ANTRA -->
+    <section class="charts-section">
+        <div class="chart-container">
+            <h2>📈 Pardavimai per laiką</h2>
+            <canvas id="salesChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2>🥧 Sąskaitų statusai</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Top Lists - TREČIA -->
+    <section class="top-section">
+        <div class="top-container">
+            <h2>🏆 Top 5 Klientai</h2>
+            <div id="top-clients">Kraunama...</div>
+        </div>
+
+        <div class="top-container">
+            <h2>⭐ Top 5 Produktai</h2>
+            <div id="top-products">Kraunama...</div>
+        </div>
+    </section>
+</main>
+
+    <footer>
+        <p>© 2026 Edgar's Invoice System</p>
+    </footer>
+
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/dark-mode.js"></script>
+</body>
+</html>

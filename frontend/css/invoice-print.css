@@ -1,0 +1,338 @@
+/* Invoice Print Styles */
+.invoice-document {
+    background: white;
+    padding: 40px;
+    max-width: 900px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    color: #333;
+}
+
+.invoice-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #C9941A;
+}
+
+.invoice-header h1 {
+    font-size: 2em;
+    color: #2C1810;
+    margin-bottom: 10px;
+}
+
+.invoice-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-info-item {
+    flex: 1;
+}
+
+.invoice-info-item strong {
+    color: #C9941A;
+}
+
+.parties-section {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.party-box {
+    flex: 1;
+    background: #FFF9E6;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #C9941A;
+}
+
+.party-box h3 {
+    color: #C9941A;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.party-box p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+}
+
+.items-table th {
+    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.items-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+.items-table tbody tr:hover {
+    background: #FFF5E1;
+}
+
+.items-table tfoot {
+    font-weight: bold;
+}
+
+.items-table tfoot td {
+    padding: 15px 12px;
+    border-top: 2px solid #C9941A;
+}
+
+.totals-section {
+    float: right;
+    width: 350px;
+    margin-top: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.total-row.grand-total {
+    font-size: 1.3em;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 3px solid #C9941A;
+    color: #C9941A;
+}
+
+.invoice-footer {
+    clear: both;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Dark mode for screen (not print) */
+body.dark-mode .invoice-document {
+    background: #1a1a2e;
+    color: #eee;
+}
+
+body.dark-mode .party-box {
+    background: #16213e;
+    border-color: #38ef7d;
+}
+
+body.dark-mode .party-box h3 {
+    color: #38ef7d;
+}
+
+body.dark-mode .party-box p {
+    color: #eee;
+}
+
+body.dark-mode .items-table td {
+    color: #eee;
+    border-bottom-color: #0f3460;
+}
+
+body.dark-mode .items-table tbody tr:hover {
+    background: #16213e;
+}
+
+body.dark-mode .invoice-header {
+    border-bottom-color: #38ef7d;
+}
+
+body.dark-mode .invoice-header h1 {
+    color: #eee;
+}
+
+body.dark-mode .total-row.grand-total {
+    color: #38ef7d;
+    border-top-color: #38ef7d;
+}
+
+body.dark-mode .items-table tfoot td {
+    border-top-color: #38ef7d;
+}
+
+/* Signature style */
+.signature {
+    font-family: 'Brush Script MT', cursive, 'Segoe UI', sans-serif;
+    font-size: 3em;
+    font-weight: bold;
+    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 5px;
+    margin: 10px 0;
+}
+
+body.dark-mode .signature {
+    background: linear-gradient(135deg, #E3B04B 0%, #FFD700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+
+/* Print styles */
+@media print {
+    body {
+        background: white !important;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .invoice-document {
+        box-shadow: none;
+        margin: 0;
+        padding: 15mm;
+        max-width: 100%;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .invoice-header {
+        border-bottom: 2px solid #000 !important;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .invoice-header h1 {
+        color: black !important;
+        font-size: 1.8em;
+    }
+    
+    .invoice-info {
+        margin-bottom: 15px;
+    }
+    
+    .parties-section {
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .party-box {
+        background: white !important;
+        border: 1px solid #000 !important;
+        color: black !important;
+        padding: 10px;
+    }
+    
+    .party-box h3 {
+        color: black !important;
+        border-bottom: 1px solid #000;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        font-size: 1em;
+    }
+    
+    .party-box p {
+        color: black !important;
+        margin: 3px 0;
+        font-size: 0.9em;
+    }
+    
+    .signature {
+        color: black !important;
+        -webkit-text-fill-color: black !important;
+        background: none !important;
+        font-size: 2em !important;
+        text-shadow: none !important;
+    }
+    
+    .items-table {
+        margin: 15px 0;
+    }
+    
+    .items-table th {
+        background: #f0f0f0 !important;
+        color: black !important;
+        border: 1px solid #000 !important;
+        padding: 8px !important;
+        font-size: 0.9em;
+    }
+    
+    .items-table td {
+        color: black !important;
+        border: 1px solid #000 !important;
+        padding: 6px 8px !important;
+        font-size: 0.9em;
+    }
+    
+    .items-table tbody tr:hover {
+        background: white !important;
+    }
+    
+    .items-table tfoot td {
+        border-top: 2px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+        font-weight: bold;
+    }
+    
+    .totals-section {
+        width: 300px;
+        margin-top: 15px;
+    }
+    
+    .total-row {
+        border-bottom: 1px solid #ccc;
+        font-size: 0.95em;
+        padding: 8px 0;
+    }
+    
+    .total-row.grand-total {
+        color: black !important;
+        border-top: 2px solid #000 !important;
+        font-size: 1.1em;
+    }
+    
+    .invoice-footer {
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #000;
+        font-size: 0.85em;
+    }
+    
+    @page {
+        margin: 10mm;
+        size: A4;
+    }
+    .invoice-info-item p,
+    .invoice-info-item strong {
+        color: black !important;
+    }
+    
+    .invoice-header h1::before {
+        content: '';  /* Paslepia ikonėlę */
+    }
+ .party-box h3::before {
+        content: '' !important;
+    }
+    
+    /* Jei ikonelės yra tekste, pašalina jas */
+    .party-box h3 {
+        font-family: 'Segoe UI', sans-serif !important;
+    }
+}
