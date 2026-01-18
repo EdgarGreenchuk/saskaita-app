@@ -1,6 +1,3 @@
-const { Pool } = require('pg');
-require('dotenv').config();
-
 // Sukuriame connection pool
 const { Pool } = require('pg');
 require('dotenv').config();
