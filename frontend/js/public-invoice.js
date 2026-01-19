@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+// const API_URL moved to config.js
 
 // Gauti invoice ID iš URL
 function getInvoiceId() {

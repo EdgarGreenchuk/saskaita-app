@@ -1,4 +1,4 @@
-const API_URL = '/api';  // Relative path
+// const API_URL moved to config.js
 
 // Funkcija gauti statistiką
 async function loadStats() {

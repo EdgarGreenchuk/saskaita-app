@@ -1,4 +1,5 @@
-const API_URL = '/api';  // Relative path
+// const API_URL moved to config.js
+
 let itemCounter = 0;
 let clients = [];
 let products = [];
