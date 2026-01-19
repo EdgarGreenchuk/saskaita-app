@@ -27,13 +27,6 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-// ⭐ SERVE INDEX.HTML FOR ROOT (PRIDĖTA)
-app.use((req, res, next) => {
-  // Išskyrus API routes, serve frontend
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-  }
-});
 
 // Start server
 app.listen(PORT, () => {
