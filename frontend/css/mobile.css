@@ -1,0 +1,443 @@
+/* ====================================
+   MOBILE.CSS - Responsive dizainas
+   Saskaita App Mobile Optimizacija
+   ==================================== */
+
+/* ====================================
+   DASHBOARD - KPI RODYKLIAI
+   ==================================== */
+
+/* Tablet: 2 stulpeliai */
+@media (max-width: 768px) {
+    .kpi-section {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px;
+        padding: 10px;
+    }
+    
+    .kpi-card {
+        padding: 15px;
+    }
+    
+    .kpi-content h3 {
+        font-size: 1.3rem;
+    }
+    
+    .kpi-content p {
+        font-size: 0.85rem;
+    }
+    
+    .kpi-icon {
+        font-size: 1.8rem;
+    }
+}
+
+/* Phone: 1 stulpelis (vienas po kito) */
+@media (max-width: 480px) {
+    .kpi-section {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+        padding: 10px;
+    }
+    
+    .kpi-card {
+        padding: 20px;
+        width: 100%;
+    }
+    
+    .kpi-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .kpi-content p {
+        font-size: 0.9rem;
+    }
+    
+    .kpi-icon {
+        font-size: 2rem;
+    }
+}
+
+
+/* ====================================
+   DASHBOARD - GRAFIKAI
+   ==================================== */
+
+@media (max-width: 768px) {
+    .charts-section {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    
+    .chart-card {
+        padding: 15px;
+    }
+    
+    canvas {
+        max-height: 300px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-card {
+        padding: 10px;
+    }
+    
+    .chart-card h3 {
+        font-size: 1rem;
+    }
+    
+    canvas {
+        max-height: 250px !important;
+    }
+}
+
+
+/* ====================================
+   INVOICE VIEW - SĄSKAITA
+   ==================================== */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .invoice-container {
+        max-width: 100% !important;
+        margin: 10px;
+        padding: 15px;
+        font-size: 13px;
+    }
+    
+    /* Header - Pirkėjas/Pardavėjas */
+    .invoice-header,
+    .parties-section {
+        flex-direction: column !important;
+        gap: 15px;
+    }
+    
+    .invoice-header > div,
+    .parties-section > div {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Sąskaitos numeris ir data */
+    .invoice-info {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+    
+    /* Logo */
+    .logo {
+        max-width: 150px;
+        height: auto;
+    }
+    
+    /* Prekių lentelė */
+    table {
+        font-size: 12px;
+        width: 100%;
+    }
+    
+    table th,
+    table td {
+        padding: 10px 6px;
+    }
+    
+    /* Jei lentelė per plati - scroll */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+    
+    /* Sumos apačioje */
+    .totals-section,
+    .summary {
+        font-size: 13px;
+        padding: 15px;
+    }
+    
+    .totals-section .row,
+    .summary .row {
+        margin: 8px 0;
+    }
+    
+    /* Payment info */
+    .payment-info {
+        font-size: 12px;
+    }
+}
+
+/* Phone - labai maži ekranai */
+@media (max-width: 480px) {
+    .invoice-container {
+        margin: 5px;
+        padding: 12px;
+        font-size: 11px;
+    }
+    
+    /* Header */
+    h1, .invoice-title {
+        font-size: 1.3rem !important;
+    }
+    
+    h2, .section-title {
+        font-size: 1rem !important;
+    }
+    
+    /* Logo */
+    .logo {
+        max-width: 120px;
+    }
+    
+    /* Lentelė - mažesnis šriftas */
+    table {
+        font-size: 10px;
+    }
+    
+    table th,
+    table td {
+        padding: 8px 4px;
+    }
+    
+    /* Sumos */
+    .totals-section,
+    .summary {
+        font-size: 11px;
+        padding: 10px;
+    }
+    
+    .total-amount,
+    .grand-total {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Payment info */
+    .payment-info {
+        font-size: 10px;
+        padding: 10px;
+    }
+    
+    /* Mygtukai */
+    button,
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* ====================================
+   NAVIGACIJA
+   ==================================== */
+
+@media (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        padding: 10px 5px;
+        gap: 5px;
+    }
+    
+    .nav-btn {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+}
+
+
+/* ====================================
+   HEADER
+   ==================================== */
+
+@media (max-width: 768px) {
+    header {
+        padding: 20px 15px;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    header p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 15px 10px;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+
+/* ====================================
+   PRODUKTAI / KLIENTAI - LENTELĖS
+   ==================================== */
+
+@media (max-width: 768px) {
+    .products-section,
+    .clients-section {
+        padding: 10px;
+    }
+    
+    /* Lentelės wrapper su scroll */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 600px; /* minimum plotis scrollui */
+    }
+}
+
+@media (max-width: 480px) {
+    table {
+        font-size: 11px;
+    }
+    
+    table th,
+    table td {
+        padding: 8px 6px;
+    }
+}
+
+
+/* ====================================
+   FORMOS
+   ==================================== */
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    input,
+    select,
+    textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    label {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 10px;
+    }
+    
+    input,
+    select,
+    textarea {
+        font-size: 13px;
+        padding: 8px;
+    }
+}
+
+
+/* ====================================
+   DARK MODE TOGGLE
+   ==================================== */
+
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        top: 15px;
+        right: 15px;
+        font-size: 1.5rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dark-mode-toggle {
+        top: 10px;
+        right: 10px;
+        font-size: 1.3rem;
+        padding: 6px;
+    }
+}
+
+
+/* ====================================
+   BENDRI MOBILE PATAISYMAI
+   ==================================== */
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    main {
+        padding: 15px 10px;
+    }
+    
+    section {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 13px;
+    }
+    
+    main {
+        padding: 10px 5px;
+    }
+}
+
+
+/* ====================================
+   PRINT (spausdinimas) - optional
+   ==================================== */
+
+@media print {
+    /* Paslėpti navigaciją ir mygtukus spausdinant */
+    nav,
+    .dark-mode-toggle,
+    button:not(.print-btn) {
+        display: none !important;
+    }
+    
+    .invoice-container {
+        max-width: 100%;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    /* Ensure proper page breaks */
+    table {
+        page-break-inside: auto;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
