@@ -194,7 +194,7 @@ async function deleteInvoice() {
 // Kopijuoti viešą nuorodą
 function copyPublicLink() {
     const invoiceId = getInvoiceId();
-    const publicUrl = `${window.location.origin}/v1/frontend/pages/public-invoice.html?id=${invoiceId}`;
+    const publicUrl = `${window.location.origin}/pages/public-invoice.html?id=${invoiceId}`;
     
     navigator.clipboard.writeText(publicUrl).then(() => {
         alert('✅ Nuoroda nukopijuota! Dabar galite ją išsiųsti klientui.');
