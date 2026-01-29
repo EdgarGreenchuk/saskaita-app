@@ -5,16 +5,17 @@ const pool = require('./database/db');
 const productsRouter = require('./routes/products');
 const clientsRouter = require('./routes/clients');
 const invoicesRouter = require('./routes/invoices');
+const authRouter = require('./routes/auth'); // ← NAUJAS
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ⭐ CORS Configuration - PATAISYTA!
+// ⭐ CORS Configuration
 app.use(cors({
   origin: [
     'http://localhost:5500',
     'http://127.0.0.1:5500',
-    /\.netlify\.app$/ // ← BET KOKS Netlify domain
+    /\.netlify\.app$/
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
@@ -23,6 +24,7 @@ app.use(cors({
 app.use(express.json());
 
 // API Routes
+app.use('/api/auth', authRouter); // ← NAUJAS
 app.use('/api/products', productsRouter);
 app.use('/api/clients', clientsRouter);
 app.use('/api/invoices', invoicesRouter);
