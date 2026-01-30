@@ -1,0 +1,514 @@
+/* ===================================
+   AUTHENTICATION PAGES STYLES
+   login.html, register.html
+   =================================== */
+
+/* ===================================
+   1. AUTH PAGE LAYOUT
+   =================================== */
+
+.auth-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f5f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ===================================
+   2. LEFT SIDE - INFO/BRANDING
+   =================================== */
+
+.auth-info {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background pattern/overlay */
+.auth-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h60v60H0z" fill="none"/><circle cx="30" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.3;
+}
+
+.auth-info-content {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.auth-logo h1 {
+    font-size: 4rem;
+    margin: 0;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.auth-logo h2 {
+    font-size: 2rem;
+    margin: 1rem 0 0;
+    font-weight: 600;
+}
+
+.auth-description h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-list li:last-child {
+    border-bottom: none;
+}
+
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: bold;
+}
+
+.auth-footer {
+    margin-top: 3rem;
+    text-align: center;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* ===================================
+   3. RIGHT SIDE - FORM CONTAINER
+   =================================== */
+
+.auth-form-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #ffffff;
+}
+
+.auth-form-wrapper {
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-form-header {
+    margin-bottom: 2rem;
+}
+
+.auth-form-header h2 {
+    font-size: 2rem;
+    color: #1a202c;
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+}
+
+.auth-form-header p {
+    color: #718096;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ===================================
+   4. FORM STYLES
+   =================================== */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input::placeholder {
+    color: #a0aec0;
+}
+
+/* Password Input with Toggle */
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper .form-input {
+    padding-right: 3rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+.eye-icon {
+    font-size: 1.2rem;
+}
+
+/* Form Options (Remember Me & Forgot Password) */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: -0.5rem 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.forgot-password-link {
+    font-size: 0.9rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ===================================
+   5. MESSAGES (Error/Success)
+   =================================== */
+
+.error-message,
+.success-message {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-message {
+    background: #fed7d7;
+    color: #c53030;
+    border: 1px solid #fc8181;
+}
+
+.error-message::before {
+    content: '⚠️';
+}
+
+.success-message {
+    background: #c6f6d5;
+    color: #2f855a;
+    border: 1px solid #68d391;
+}
+
+.success-message::before {
+    content: '✓';
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===================================
+   6. SUBMIT BUTTON
+   =================================== */
+
+.btn-submit {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Button Loading State */
+.btn-submit.loading .btn-text {
+    opacity: 0;
+}
+
+.btn-submit.loading .btn-loader {
+    display: flex !important;
+}
+
+.btn-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Spinner Animation */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===================================
+   7. AUTH SWITCH (Register Link)
+   =================================== */
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-switch p {
+    color: #718096;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.auth-switch-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.auth-switch-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ===================================
+   8. RESPONSIVE DESIGN
+   =================================== */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .auth-info {
+        padding: 2rem;
+        min-height: 40vh;
+    }
+
+    .auth-logo h1 {
+        font-size: 3rem;
+    }
+
+    .auth-logo h2 {
+        font-size: 1.5rem;
+    }
+
+    .auth-description h3 {
+        font-size: 1.25rem;
+    }
+
+    .feature-list {
+        display: none; /* Hide features on mobile */
+    }
+
+    .auth-footer {
+        display: none; /* Hide footer on mobile */
+    }
+
+    .auth-form-container {
+        padding: 2rem 1rem;
+    }
+
+    .auth-form-wrapper {
+        max-width: 100%;
+    }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+    .auth-info {
+        min-height: 30vh;
+        padding: 1.5rem;
+    }
+
+    .auth-logo h1 {
+        font-size: 2.5rem;
+    }
+
+    .auth-logo h2 {
+        font-size: 1.25rem;
+    }
+
+    .auth-form-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .btn-submit {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* ===================================
+   9. ACCESSIBILITY & PRINT
+   =================================== */
+
+/* Focus visible for keyboard navigation */
+.form-input:focus-visible,
+.btn-submit:focus-visible,
+.forgot-password-link:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .auth-page {
+        display: none;
+    }
+}
+
+/* ===================================
+   10. ANIMATIONS
+   =================================== */
+
+/* Fade in animation for form */
+.auth-form-wrapper {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   11. REGISTER PAGE SPECIFIC
+   (reuse same styles)
+   =================================== */
+
+/* Register form uses same styles as .auth-form */
+/* Additional fields for register can use same form-group styles */
