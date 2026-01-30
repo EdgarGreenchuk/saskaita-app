@@ -232,8 +232,25 @@
     <footer>
         <p>© 2026 Edgar's Invoice System</p>
     </footer>
+    <script src="..js/auth.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/edit-invoice.js"></script>
     <script src="../js/dark-mode.js"></script>
+    
+        <!-- AUTHENTICATION CHECK -->
+
+    <script>
+// PROTECT THIS PAGE - require authentication
+(async function() {
+    const isAuth = await AuthService.requireAuth();
+    if (isAuth) {
+        // Update UI with user info
+        AuthService.updateUserUI();
+        
+        // Setup logout button
+        AuthService.setupLogoutButton('#logout-btn');
+    }
+})();
+</script>
 </body>
 </html>
