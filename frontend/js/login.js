@@ -210,7 +210,7 @@ async function handleLogin(e) {
             
             // Redirect to dashboard after short delay
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = 'pages/dashboard.html';
             }, 500);
             
         } else {
