@@ -9,11 +9,11 @@ let editingId = null;
 // Gauti visus klientus
 async function loadClients() {
     try {
-        const response = await fetch(`${API_URL}/clients`);
-        const clients = await response.json();
+        const clients = await API.clients.getAll();
         displayClients(clients);
     } catch (error) {
         console.error('Klaida kraunant klientus:', error);
+        alert('Nepavyko užkrauti klientų: ' + error.message);
     }
 }
 
@@ -70,8 +70,7 @@ function displayClients(clients) {
 // Redaguoti klientą
 async function editClient(id) {
     try {
-        const response = await fetch(`${API_URL}/clients/${id}`);
-        const client = await response.json();
+        const client = await API.clients.getById(id);
 
         // Užpildyti formą
         document.getElementById('company_name').value = client.company_name;
@@ -91,8 +90,8 @@ async function editClient(id) {
         // Scroll į formą
         document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida kraunant kliento duomenis');
+        console.error('Klaida kraunant kliento duomenis:', error);
+        alert('Nepavyko užkrauti kliento: ' + error.message);
     }
 }
 
@@ -112,19 +111,12 @@ async function deleteClient(id, name) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/clients/${id}`, {
-            method: 'DELETE'
-        });
-
-        if (response.ok) {
-            alert('Klientas ištrintas!');
-            loadClients();
-        } else {
-            alert('Klaida trinant klientą');
-        }
+        await API.clients.delete(id);
+        alert('Klientas ištrintas sėkmingai!');
+        loadClients();
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida trinant klientą');
+        console.error('Klaida trinant klientą:', error);
+        alert('Nepavyko ištrinti kliento: ' + error.message);
     }
 }
 
@@ -145,33 +137,21 @@ async function saveClient(e) {
     };
 
     try {
-        let response;
         if (editingId) {
             // UPDATE
-            response = await fetch(`${API_URL}/clients/${editingId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(clientData)
-            });
+            await API.clients.update(editingId, clientData);
+            alert('Klientas atnaujintas sėkmingai!');
         } else {
             // CREATE
-            response = await fetch(`${API_URL}/clients`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(clientData)
-            });
+            await API.clients.create(clientData);
+            alert('Klientas pridėtas sėkmingai!');
         }
-
-        if (response.ok) {
-            alert(editingId ? 'Klientas atnaujintas!' : 'Klientas pridėtas!');
-            cancelEdit();
-            loadClients();
-        } else {
-            alert('Klaida išsaugant klientą');
-        }
+        
+        cancelEdit();
+        loadClients();
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida išsaugant klientą');
+        console.error('Klaida išsaugant klientą:', error);
+        alert('Nepavyko išsaugoti kliento: ' + error.message);
     }
 }
 

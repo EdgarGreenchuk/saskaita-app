@@ -3,8 +3,7 @@
 // Gauti visas sąskaitas
 async function loadInvoices() {
     try {
-        const response = await fetch(`${API_URL}/invoices`);
-        const invoices = await response.json();
+        const invoices = await API.invoices.getAll();
         displayInvoices(invoices);
     } catch (error) {
         console.error('Klaida kraunant sąskaitas:', error);
@@ -92,19 +91,12 @@ async function deleteInvoice(id, invoiceNumber) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/invoices/${id}`, {
-            method: 'DELETE'
-        });
-
-        if (response.ok) {
-            alert('Sąskaita ištrinta!');
-            loadInvoices();
-        } else {
-            alert('Klaida trinant sąskaitą');
-        }
+        await API.invoices.delete(id);
+        alert('Sąskaita ištrinta sėkmingai!');
+        loadInvoices();
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida trinant sąskaitą');
+        console.error('Klaida trinant sąskaitą:', error);
+        alert('Nepavyko ištrinti sąskaitos: ' + error.message);
     }
 }
 

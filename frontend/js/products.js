@@ -5,8 +5,7 @@ let editingProductId = null;
 // Gauti visus produktus
 async function loadProducts() {
     try {
-        const response = await fetch(`${API_URL}/products`);
-        const products = await response.json();
+        const products = await API.products.getAll();
         displayProducts(products);
     } catch (error) {
         console.error('Klaida kraunant produktus:', error);
@@ -74,44 +73,30 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     };
 
     try {
-        let response;
-        
         if (editingProductId) {
             // Atnaujinti esamą produktą
-            response = await fetch(`${API_URL}/products/${editingProductId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
+            await API.products.update(editingProductId, productData);
+            alert('Produktas atnaujintas sėkmingai!');
         } else {
             // Pridėti naują produktą
-            response = await fetch(`${API_URL}/products`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
+            await API.products.create(productData);
+            alert('Produktas pridėtas sėkmingai!');
         }
 
-        if (response.ok) {
-            alert(editingProductId ? 'Produktas atnaujintas!' : 'Produktas pridėtas!');
-            document.getElementById('product-form').reset();
-            editingProductId = null;
-            document.getElementById('cancel-edit').style.display = 'none';
-            loadProducts();
-        } else {
-            alert('Klaida išsaugant produktą');
-        }
+        document.getElementById('product-form').reset();
+        editingProductId = null;
+        document.getElementById('cancel-edit').style.display = 'none';
+        loadProducts();
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida išsaugant produktą');
+        console.error('Klaida išsaugant produktą:', error);
+        alert('Nepavyko išsaugoti produkto: ' + error.message);
     }
 });
 
 // Redaguoti produktą
 async function editProduct(id) {
     try {
-        const response = await fetch(`${API_URL}/products/${id}`);
-        const product = await response.json();
+        const product = await API.products.getById(id);
 
         document.getElementById('name').value = product.name;
         document.getElementById('description').value = product.description || '';
@@ -124,8 +109,8 @@ async function editProduct(id) {
         // Scroll į formą
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida kraunant produktą');
+        console.error('Klaida kraunant produktą:', error);
+        alert('Nepavyko užkrauti produkto: ' + error.message);
     }
 }
 
@@ -143,19 +128,12 @@ async function deleteProduct(id, name) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/products/${id}`, {
-            method: 'DELETE'
-        });
-
-        if (response.ok) {
-            alert('Produktas ištrintas!');
-            loadProducts();
-        } else {
-            alert('Klaida trinant produktą');
-        }
+        await API.products.delete(id);
+        alert('Produktas ištrintas sėkmingai!');
+        loadProducts();
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('Klaida trinant produktą');
+        console.error('Klaida trinant produktą:', error);
+        alert('Nepavyko ištrinti produkto: ' + error.message);
     }
 }
 

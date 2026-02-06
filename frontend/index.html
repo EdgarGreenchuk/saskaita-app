@@ -62,12 +62,10 @@
     <footer>
         <p>© 2026 Edgar's Invoice System | Backend: PostgreSQL + Node.js</p>
     </footer>
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/dark-mode.js"></script>
-
-    <!-- AUTHENTICATION CHECK -->
+    <script src="js/config.js"></script> <!-- 1. Defines API_URL -->
+    <script src="js/auth.js"></script> <!-- 2. Defines AuthService -->
+    <script src="js/api.js"></script> <!-- 3. Uses AuthService ← PRIDĖTI ČIA -->
+     <!-- AUTHENTICATION CHECK -->
 
     <script>
         // PROTECT THIS PAGE - require authentication
@@ -82,6 +80,10 @@
             }
         })();
     </script>
+    <script src="js/main.js"></script> <!-- 4. Uses API -->
+    <script src="js/dark-mode.js"></script> <!-- 5. UI features -->
+
+   
 </body>
 
 </html>
