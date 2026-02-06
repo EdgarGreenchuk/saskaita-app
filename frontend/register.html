@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prisijungimas - Sąskaitų Sistema</title>
+    <title>Registracija - Sąskaitų Sistema</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
 </head>
@@ -21,7 +21,7 @@
                 </div>
                 
                 <div class="auth-description">
-                    <h3>Valdyk sąskaitas profesionaliai</h3>
+                    <h3>Prisijunkite prie profesionalios sąskaitų sistemos</h3>
                     <ul class="feature-list">
                         <li>
                             <span class="feature-icon">✓</span>
@@ -48,19 +48,35 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDE - Login Form -->
+        <!-- RIGHT SIDE - Register Form -->
         <div class="auth-form-container">
             <div class="auth-form-wrapper">
                 
                 <!-- Header -->
                 <div class="auth-form-header">
-                    <h2>Prisijungimas</h2>
-                    <p>Sveiki sugrįžę! Prašome prisijungti prie savo paskyros.</p>
+                    <h2>Registracija</h2>
+                    <p>Sukurkite paskyrą ir pradėkite valdyti sąskaitas profesionaliai.</p>
                 </div>
 
-                <!-- Login Form -->
-                <form id="login-form" class="auth-form">
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form">
                     
+                    <!-- Full Name Field -->
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">
+                            Vardas ir Pavardė
+                        </label>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            name="fullName"
+                            class="form-input" 
+                            placeholder="Jonas Jonaitis"
+                            required
+                            autocomplete="name"
+                        >
+                    </div>
+
                     <!-- Email Field -->
                     <div class="form-group">
                         <label for="email" class="form-label">
@@ -90,7 +106,7 @@
                                 class="form-input" 
                                 placeholder="••••••••"
                                 required
-                                autocomplete="current-password"
+                                autocomplete="new-password"
                             >
                             <button 
                                 type="button" 
@@ -101,38 +117,64 @@
                                 <span class="eye-icon">👁️</span>
                             </button>
                         </div>
+                        <small style="color: #718096; font-size: 0.85rem; margin-top: 0.25rem; display: block;">
+                            Mažiausiai 6 simboliai
+                        </small>
                     </div>
 
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="remember-me" name="remember">
-                            <span>Prisiminti mane</span>
+                    <!-- Confirm Password Field -->
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">
+                            Pakartokite slaptažodį
                         </label>
-                        <a href="forgot-password.html" class="forgot-password-link">
-                            Pamiršote slaptažodį?
-                        </a>
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                name="confirmPassword"
+                                class="form-input" 
+                                placeholder="••••••••"
+                                required
+                                autocomplete="new-password"
+                            >
+                            <button 
+                                type="button" 
+                                id="toggle-confirm-password" 
+                                class="toggle-password"
+                                aria-label="Rodyti slaptažodį"
+                            >
+                                <span class="eye-icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span>Sutinku su <a href="#" style="color: #667eea;">sąlygomis</a></span>
+                        </label>
                     </div>
 
                     <!-- Error Message -->
                     <div id="error-message" class="error-message hidden"></div>
 
-                    <!-- Success Message (optional) -->
+                    <!-- Success Message -->
                     <div id="success-message" class="success-message hidden"></div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn-submit" id="login-btn">
-                        <span class="btn-text">Prisijungti</span>
+                    <button type="submit" class="btn-submit" id="register-btn">
+                        <span class="btn-text">Registruotis</span>
                         <span class="btn-loader hidden">
                             <span class="spinner"></span>
                         </span>
                     </button>
 
-                    <!-- Register Link -->
+                    <!-- Login Link -->
                     <div class="auth-switch">
                         <p>
-                            Neturite paskyros? 
-                            <a href="register.html" class="auth-switch-link">Registruokis čia</a>
+                            Jau turite paskyrą? 
+                            <a href="login.html" class="auth-switch-link">Prisijunkite čia</a>
                         </p>
                     </div>
 
@@ -144,9 +186,9 @@
     </div>
 
     <!-- SCRIPTS -->
-     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/login.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/register.js"></script>
 
 </body>
 </html>

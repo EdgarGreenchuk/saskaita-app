@@ -16,14 +16,14 @@
         <h1>📊 Sąskaitų Valdymo Sistema</h1>
         <p>Profesionalus PVM sąskaitų valdymas</p>
     </header>
-<nav>
-    <a href="index.html" class="nav-btn">🏠 Pradžia</a>
-    <a href="pages/dashboard.html" class="nav-btn">📊 Dashboard</a>
-    <a href="pages/products.html" class="nav-btn">📦 Produktai</a>
-    <a href="pages/clients.html" class="nav-btn">👥 Klientai</a>
-    <a href="pages/invoices.html" class="nav-btn">📋 Sąskaitos</a>
-    <a href="pages/create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
-</nav>
+    <nav>
+        <a href="index.html" class="nav-btn">🏠 Pradžia</a>
+        <a href="pages/dashboard.html" class="nav-btn">📊 Dashboard</a>
+        <a href="pages/products.html" class="nav-btn">📦 Produktai</a>
+        <a href="pages/clients.html" class="nav-btn">👥 Klientai</a>
+        <a href="pages/invoices.html" class="nav-btn">📋 Sąskaitos</a>
+        <a href="pages/create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
+    </nav>
     <main>
         <div class="welcome-card">
             <h2>Sveiki sugrįžę!</h2>
@@ -55,26 +55,26 @@
     <footer>
         <p>© 2026 Edgar's Invoice System | Backend: PostgreSQL + Node.js</p>
     </footer>
-    <script src="js/auth.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
     <script src="js/dark-mode.js"></script>
 
-        <!-- AUTHENTICATION CHECK -->
+    <!-- AUTHENTICATION CHECK -->
 
     <script>
-// PROTECT THIS PAGE - require authentication
-(async function() {
-    const isAuth = await AuthService.requireAuth();
-    if (isAuth) {
-        // Update UI with user info
-        AuthService.updateUserUI();
-        
-        // Setup logout button
-        AuthService.setupLogoutButton('#logout-btn');
-    }
-})();
-</script>
+        // PROTECT THIS PAGE - require authentication
+        (async function () {
+            const isAuth = await AuthService.requireAuth();
+            if (isAuth) {
+                // Update UI with user info
+                AuthService.updateUserUI();
+
+                // Setup logout button
+                AuthService.setupLogoutButton('#logout-btn');
+            }
+        })();
+    </script>
 </body>
 
 </html>
