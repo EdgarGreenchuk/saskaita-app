@@ -229,7 +229,7 @@ const AuthService = {
         console.log('✅ Logout successful');
         
         // Redirect to login
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
     },
 
     // ==========================================
