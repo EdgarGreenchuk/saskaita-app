@@ -1,11 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database/db');
+const { authenticateToken } = require('../middleware/auth');
 
-// GET - gauti visus produktus
+// ⭐ REQUIRE AUTH FOR ALL ROUTES
+router.use(authenticateToken);
+
+// GET - gauti visus produktus (TIK USERIO)
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products ORDER BY id DESC');
+    const result = await pool.query(
+      'SELECT * FROM products WHERE user_id = $1 ORDER BY id DESC',
+      [req.user.userId]
+    );
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -13,11 +20,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET - gauti vieną produktą
+// GET - gauti vieną produktą (TIKRINTI OWNERSHIP)
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+    const result = await pool.query(
+      'SELECT * FROM products WHERE id = $1 AND user_id = $2',
+      [id, req.user.userId]
+    );
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Produktas nerastas' });
@@ -30,14 +40,14 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST - pridėti naują produktą
+// POST - pridėti naują produktą (SU user_id)
 router.post('/', async (req, res) => {
   try {
     const { name, description, price, unit } = req.body;
     
     const result = await pool.query(
-      'INSERT INTO products (name, description, price, unit) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, description, price, unit || 'vnt']
+      'INSERT INTO products (name, description, price, unit, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, description, price, unit || 'vnt', req.user.userId]
     );
     
     res.status(201).json(result.rows[0]);
@@ -47,19 +57,19 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT - atnaujinti produktą
+// PUT - atnaujinti produktą (TIKRINTI OWNERSHIP)
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, unit } = req.body;
     
     const result = await pool.query(
-      'UPDATE products SET name = $1, description = $2, price = $3, unit = $4 WHERE id = $5 RETURNING *',
-      [name, description, price, unit, id]
+      'UPDATE products SET name = $1, description = $2, price = $3, unit = $4 WHERE id = $5 AND user_id = $6 RETURNING *',
+      [name, description, price, unit, id, req.user.userId]
     );
     
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Produktas nerastas' });
+      return res.status(404).json({ error: 'Produktas nerastas arba neturite teisių' });
     }
     
     res.json(result.rows[0]);
@@ -69,15 +79,18 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE - ištrinti produktą
+// DELETE - ištrinti produktą (TIKRINTI OWNERSHIP)
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     
-    const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query(
+      'DELETE FROM products WHERE id = $1 AND user_id = $2 RETURNING *',
+      [id, req.user.userId]
+    );
     
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Produktas nerastas' });
+      return res.status(404).json({ error: 'Produktas nerastas arba neturite teisių' });
     }
     
     res.json({ message: 'Produktas ištrintas', product: result.rows[0] });
