@@ -228,9 +228,14 @@ const AuthService = {
         this.clearAuth();
         console.log('✅ Logout successful');
         
-        // Redirect to login
-        window.location.href = '/login.html';
-    },
+       // ⭐ SMART REDIRECT - works from any folder
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/pages/')) {
+        window.location.href = '../login.html';
+    } else {
+        window.location.href = 'login.html';
+    }
+},
 
     // ==========================================
     // PAGE PROTECTION
