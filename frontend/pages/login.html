@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisijungimas - Sąskaitų Sistema</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+    
+    <!-- AUTH CONTAINER - Split Screen -->
+    <div class="auth-container">
+        
+        <!-- LEFT SIDE - Info/Branding -->
+        <div class="auth-info">
+            <div class="auth-info-content">
+                <div class="auth-logo">
+                    <h1>🔐</h1>
+                    <h2>Sąskaitų Sistema</h2>
+                </div>
+                
+                <div class="auth-description">
+                    <h3>Valdyk sąskaitas profesionaliai</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            <span>Greitas sąskaitų kūrimas</span>
+                        </li>
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            <span>Klientų valdymas</span>
+                        </li>
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            <span>Produktų katalogas</span>
+                        </li>
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            <span>Statistika ir ataskaitos</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="auth-footer">
+                    <p>© 2026 Sąskaitų Sistema</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE - Login Form -->
+        <div class="auth-form-container">
+            <div class="auth-form-wrapper">
+                
+                <!-- Header -->
+                <div class="auth-form-header">
+                    <h2>Prisijungimas</h2>
+                    <p>Sveiki sugrįžę! Prašome prisijungti prie savo paskyros.</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            El. paštas
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            class="form-input" 
+                            placeholder="jusu@elpastas.lt"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            Slaptažodis
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                class="form-input" 
+                                placeholder="••••••••"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button 
+                                type="button" 
+                                id="toggle-password" 
+                                class="toggle-password"
+                                aria-label="Rodyti slaptažodį"
+                            >
+                                <span class="eye-icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me" name="remember">
+                            <span>Prisiminti mane</span>
+                        </label>
+                        <a href="forgot-password.html" class="forgot-password-link">
+                            Pamiršote slaptažodį?
+                        </a>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-message" class="error-message hidden"></div>
+
+                    <!-- Success Message (optional) -->
+                    <div id="success-message" class="success-message hidden"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit" id="login-btn">
+                        <span class="btn-text">Prisijungti</span>
+                        <span class="btn-loader hidden">
+                            <span class="spinner"></span>
+                        </span>
+                    </button>
+
+                    <!-- Register Link -->
+                    <div class="auth-switch">
+                        <p>
+                            Neturite paskyros? 
+                            <a href="register.html" class="auth-switch-link">Registruokis čia</a>
+                        </p>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+     <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
+
+</body>
+</html>
