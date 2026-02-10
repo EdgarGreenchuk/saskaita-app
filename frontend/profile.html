@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mano Profilis</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .theme-option {
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .theme-option:has(input:checked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .theme-option input {
+            display: none;
+        }
+        .theme-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .theme-option span {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2C1810;
+        }
+        body.dark-mode .theme-option span {
+            color: #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
+
+    <header>
+        <h1>👤 Pardavėjo Profilis</h1>
+        <p>Šie duomenys rodomi sąskaitose kaip pardavėjo informacija</p>
+    </header>
+
+    <nav>
+        <a href="index.html" class="nav-btn">🏠 Pradžia</a>
+        <a href="invoices.html" class="nav-btn">📄 Sąskaitos</a>
+        <a href="clients.html" class="nav-btn">👥 Klientai</a>
+        <a href="products.html" class="nav-btn">📦 Produktai</a>
+        <a href="create-invoice.html" class="nav-btn">➕ Nauja sąskaita</a>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <form id="profile-form">
+
+                <h3 style="margin-bottom: 20px; color: #2C1810;">🏢 Įmonės duomenys</h3>
+
+                <div class="form-group">
+                    <label>Vardas / Įmonės pavadinimas *</label>
+                    <input type="text" id="company_name"
+                           placeholder="Pvz: Jonas Jonaitis arba UAB Mano Įmonė" required>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Įmonės kodas</label>
+                        <input type="text" id="company_code" placeholder="Pvz: 123456789">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>PVM kodas</label>
+                        <input type="text" id="vat_code" placeholder="Pvz: LT123456789">
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px; color: #2C1810;">📍 Adresas</h3>
+
+                <div class="form-group">
+                    <label>Gatvė, namo nr.</label>
+                    <input type="text" id="address" placeholder="Pvz: Gedimino pr. 1">
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Miestas</label>
+                        <input type="text" id="city" placeholder="Pvz: Vilnius">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Pašto kodas</label>
+                        <input type="text" id="postal_code" placeholder="Pvz: LT-01103">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Šalis</label>
+                        <input type="text" id="country" value="Lietuva">
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px; color: #2C1810;">📞 Kontaktai</h3>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>El. paštas</label>
+                        <input type="email" id="email" placeholder="Pvz: vardas@gmail.com">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Telefonas</label>
+                        <input type="text" id="phone" placeholder="Pvz: +370 600 12345">
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px; color: #2C1810;">🏦 Banko duomenys</h3>
+
+                <div class="form-group">
+                    <label>IBAN sąskaitos numeris</label>
+                    <input type="text" id="iban"
+                           placeholder="Pvz: LT12 3456 7890 1234 5678"
+                           oninput="formatIBAN(this)">
+                    <small style="color: #888;">Automatiškai formatuojamas su tarpais</small>
+                </div>
+
+                <h3 style="margin-bottom: 20px; color: #2C1810;">🎨 Spalvų tema</h3>
+
+                <div class="form-group">
+                    <label>Pasirinkite temą (iš karto matosi!</label>
+                    <div id="theme-picker"
+                         style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+
+                        <label class="theme-option" data-theme="amber">
+                            <input type="radio" name="theme" value="amber">
+                            <div class="theme-preview"
+                                 style="background: linear-gradient(135deg, #f85032 0%, #C9941A 100%);"></div>
+                            <span>🟡 Gintarinė</span>
+                        </label>
+
+                        <label class="theme-option" data-theme="blue">
+                            <input type="radio" name="theme" value="blue">
+                            <div class="theme-preview"
+                                 style="background: linear-gradient(135deg, #1A6FC9 0%, #4A9FE3 100%);"></div>
+                            <span>🔵 Vandenyno</span>
+                        </label>
+
+                        <label class="theme-option" data-theme="green">
+                            <input type="radio" name="theme" value="green">
+                            <div class="theme-preview"
+                                 style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"></div>
+                            <span>🟢 Miško</span>
+                        </label>
+
+                        <label class="theme-option" data-theme="red">
+                            <input type="radio" name="theme" value="red">
+                            <div class="theme-preview"
+                                 style="background: linear-gradient(135deg, #C9281A 0%, #f85032 100%);"></div>
+                            <span>🔴 Rubino</span>
+                        </label>
+
+                        <label class="theme-option" data-theme="purple">
+                            <input type="radio" name="theme" value="purple">
+                            <div class="theme-preview"
+                                 style="background: linear-gradient(135deg, #7B1AC9 0%, #c471ed 100%);"></div>
+                            <span>🟣 Violetinė</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="submit" class="btn" id="save-btn">
+                        💾 Išsaugoti profilį
+                    </button>
+                    <button type="button" class="btn"
+                            onclick="window.location.href='index.html'"
+                            style="background: #8B7355;">
+                        Atšaukti
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Preview -->
+        <div id="preview-container" style="display: none; margin-top: 40px;">
+            <h2 style="margin-bottom: 15px;">👁️ Kaip atrodys sąskaitoje:</h2>
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px;
+                        border: 2px solid var(--primary); max-width: 400px;">
+                <h3 style="margin-bottom: 15px;">Pardavėjas</h3>
+                <div id="invoice-preview"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>📊 Sąskaita App &copy; 2025</p>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/themes.js"></script>
+    <script src="js/dark-mode.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

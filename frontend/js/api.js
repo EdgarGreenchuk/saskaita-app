@@ -179,6 +179,10 @@ class ApiService {
         update: (id, data) => this.put(`/invoices/${id}`, data),
         delete: (id) => this.delete(`/invoices/${id}`)
     };
+    seller = {
+    get: () => this.get('/seller'),
+    save: (data) => this.put('/seller', data)
+};
 }
 
 // Global instance - available everywhere

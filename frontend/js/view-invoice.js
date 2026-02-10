@@ -1,5 +1,3 @@
-// const API_URL moved to config.js
-
 function getInvoiceId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id');
@@ -7,30 +5,36 @@ function getInvoiceId() {
 
 async function loadInvoice() {
     const invoiceId = getInvoiceId();
-    
+
     if (!invoiceId) {
         document.getElementById('invoice-container').innerHTML = '<p>Klaida: Sąskaita nerasta</p>';
         return;
     }
-    
+
     try {
-        const invoice = await API.invoices.getById(invoiceId);
-        displayInvoice(invoice);
+        // Kraunam abu vienu metu
+        const [invoice, seller] = await Promise.all([
+            API.invoices.getById(invoiceId),
+            API.seller.get()
+        ]);
+
+        displayInvoice(invoice, seller);
     } catch (error) {
         console.error('Klaida kraunant sąskaitą:', error);
-        document.getElementById('invoice-container').innerHTML = '<p style="color: red;">Klaida kraunant sąskaitą: ' + error.message + '</p>';
+        document.getElementById('invoice-container').innerHTML =
+            '<p style="color: red;">Klaida kraunant sąskaitą: ' + error.message + '</p>';
     }
 }
 
-function displayInvoice(invoice) {
+function displayInvoice(invoice, seller) {
     const invoiceDate = new Date(invoice.invoice_date).toLocaleDateString('lt-LT');
     const dueDate = new Date(invoice.due_date).toLocaleDateString('lt-LT');
-    
+
     let itemsHTML = '';
     invoice.items.forEach((item, index) => {
         const lineTotal = parseFloat(item.line_total);
         const price = parseFloat(item.price);
-        
+
         let discountHTML = '-';
         if (item.discount_type === 'fixed' && item.discount_value > 0) {
             discountHTML = `-${parseFloat(item.discount_value).toFixed(2)} €`;
@@ -38,7 +42,7 @@ function displayInvoice(invoice) {
             const discountAmount = (item.quantity * price * item.discount_value / 100);
             discountHTML = `${item.discount_value}% (-${discountAmount.toFixed(2)} €)`;
         }
-        
+
         itemsHTML += `
             <tr>
                 <td>${index + 1}</td>
@@ -53,14 +57,26 @@ function displayInvoice(invoice) {
             </tr>
         `;
     });
-    
+
+    // Pardavėjo blokas - dinaminis iš DB
+    const sellerHTML = seller ? `
+        <p><strong>${seller.company_name || '-'}</strong></p>
+        ${seller.company_code ? `<p>Įmonės kodas: ${seller.company_code}</p>` : ''}
+        ${seller.vat_code ? `<p>PVM kodas: ${seller.vat_code}</p>` : ''}
+        ${seller.address ? `<p>${seller.address}${seller.city ? ', ' + seller.city : ''}${seller.postal_code ? ' ' + seller.postal_code : ''}</p>` : ''}
+        ${seller.country ? `<p>${seller.country}</p>` : ''}
+        ${seller.email ? `<p>El. paštas: ${seller.email}</p>` : ''}
+        ${seller.phone ? `<p>Tel: ${seller.phone}</p>` : ''}
+        ${seller.iban ? `<p>IBAN: ${seller.iban}</p>` : ''}
+    ` : '<p style="color: orange;">⚠️ Profilis nepilnas - <a href="profile.html">užpildykite čia</a></p>';
+
     const html = `
         <div class="invoice-document">
             <div class="invoice-header">
                 <h1><span class="no-print">📊 </span>PVM SĄSKAITA FAKTŪRA</h1>
                 <p>Sąskaitos numeris: <strong>${invoice.invoice_number}</strong></p>
             </div>
-            
+
             <div class="invoice-info">
                 <div class="invoice-info-item">
                     <p><strong>Sąskaitos data:</strong> ${invoiceDate}</p>
@@ -69,21 +85,13 @@ function displayInvoice(invoice) {
                     <p><strong>Mokėjimo terminas:</strong> ${dueDate}</p>
                 </div>
             </div>
-            
+
             <div class="parties-section">
                 <div class="party-box">
                     <h3><span class="no-print">📤 </span>Pardavėjas</h3>
-                    <p><strong>Edgar Grinčuk</strong></p>
-                    <p>Adresas: Saulėtoji 55 Jašiūnai</p>
-                    <p>El. paštas: edgariukui@gmail.com</p>
-                    <p>Tel: +370 600 86227</p>
-                    <div style="margin-top: 20px; text-align: center;">
-                        <span class="eg-signature">
-                            <span class="eg-signature-text">ЭG</span>
-                        </span>
-                    </div>
+                    ${sellerHTML}
                 </div>
-                
+
                 <div class="party-box">
                     <h3><span class="no-print">📥 </span>Pirkėjas</h3>
                     <p><strong>${invoice.company_name || 'Nežinomas klientas'}</strong></p>
@@ -95,7 +103,7 @@ function displayInvoice(invoice) {
                     ${invoice.phone ? `<p>Tel: ${invoice.phone}</p>` : ''}
                 </div>
             </div>
-            
+
             <table class="items-table">
                 <thead>
                     <tr>
@@ -119,7 +127,7 @@ function displayInvoice(invoice) {
                     ` : ''}
                 </tfoot>
             </table>
-            
+
             <div class="totals-section">
                 <div class="total-row">
                     <span>Suma be PVM:</span>
@@ -134,14 +142,14 @@ function displayInvoice(invoice) {
                     <strong>${parseFloat(invoice.total).toFixed(2)} €</strong>
                 </div>
             </div>
-            
+
             <div class="invoice-footer">
                 <p>Ačiū už bendradarbiavimą!</p>
                 <p>Sugeneruota: ${new Date().toLocaleDateString('lt-LT')} ${new Date().toLocaleTimeString('lt-LT')}</p>
             </div>
         </div>
     `;
-    
+
     document.getElementById('invoice-container').innerHTML = html;
 }
 
@@ -152,11 +160,11 @@ function editInvoice() {
 
 async function deleteInvoice() {
     const invoiceId = getInvoiceId();
-    
+
     if (!confirm('Ar tikrai norite ištrinti šią sąskaitą? Šis veiksmas negrįžtamas!')) {
         return;
     }
-    
+
     try {
         await API.invoices.delete(invoiceId);
         alert('✅ Sąskaita ištrinta sėkmingai!');
@@ -170,7 +178,7 @@ async function deleteInvoice() {
 function copyPublicLink() {
     const invoiceId = getInvoiceId();
     const publicUrl = `${window.location.origin}/pages/public-invoice.html?id=${invoiceId}`;
-    
+
     navigator.clipboard.writeText(publicUrl).then(() => {
         alert('✅ Nuoroda nukopijuota!');
     }).catch(() => {

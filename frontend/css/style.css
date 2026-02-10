@@ -1,3 +1,12 @@
+:root {
+    --primary: #C9941A;
+    --primary-dark: #a07a15;
+    --primary-hover: #E3B04B;
+    --primary-light: rgba(201, 148, 26, 0.1);
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -44,7 +53,7 @@ nav {
 }
 
 .nav-btn {
-    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: #2C1810;
     padding: 15px 30px;
     border-radius: 8px;
@@ -93,7 +102,7 @@ main {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: #2C1810;
     padding: 30px;
     border-radius: 10px;
@@ -168,11 +177,11 @@ footer {
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #C9941A;
+    border-color: var(--primary);
 }
 
 .btn {
-    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: #2C1810;
     padding: 12px 30px;
     border: none;
@@ -207,7 +216,7 @@ table td {
 }
 
 table th {
-    background: linear-gradient(135deg, #C9941A 0%, #E3B04B 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: #2C1810;
     font-weight: bold;
 }
@@ -236,7 +245,7 @@ table tr:hover {
     top: 20px;
     right: 20px;
     background: #C9A88A;
-    border: 2px solid #C9941A;
+    border: 2px solid var(--primary);
     padding: 15px 20px;
     border-radius: 50px;
     cursor: pointer;
@@ -290,7 +299,7 @@ body.dark-mode .form-group select {
 body.dark-mode .form-group input:focus,
 body.dark-mode .form-group textarea:focus,
 body.dark-mode .form-group select:focus {
-    border-color: #E3B04B;
+    border-color: var(--primary-hover);
 }
 
 body.dark-mode table {
@@ -308,7 +317,7 @@ body.dark-mode table tr:hover {
 body.dark-mode .dark-mode-toggle {
     background: #16213e;
     color: #eee;
-    border-color: #E3B04B;
+    border-color: var(--primary-hover);
 }
 
 /* Dark mode - žali akcentai */
