@@ -5,7 +5,8 @@ const pool = require('./database/db');
 const productsRouter = require('./routes/products');
 const clientsRouter = require('./routes/clients');
 const invoicesRouter = require('./routes/invoices');
-const authRouter = require('./routes/auth'); // ← NAUJAS
+const authRouter = require('./routes/auth'); 
+const sellerRoutes = require('./routes/seller');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,10 +26,11 @@ app.use(cors({
 app.use(express.json());
 
 // API Routes
-app.use('/api/auth', authRouter); // ← NAUJAS
+app.use('/api/auth', authRouter); 
 app.use('/api/products', productsRouter);
 app.use('/api/clients', clientsRouter);
 app.use('/api/invoices', invoicesRouter);
+app.use('/api/seller', sellerRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
