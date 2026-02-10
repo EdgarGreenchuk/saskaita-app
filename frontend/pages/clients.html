@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="lt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,35 +8,36 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/mobile.css">
 </head>
+
 <body>
     <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
-    
+
     <header>
         <h1>👥 Klientų Valdymas</h1>
         <p>Tvarkykite savo klientų duomenis</p>
     </header>
 
-   <nav>
-    <a href="../index.html" class="nav-btn">🏠 Pradžia</a>
-    <a href="dashboard.html" class="nav-btn">📊 Dashboard</a>
-    <a href="products.html" class="nav-btn">📦 Produktai</a>
-    <a href="clients.html" class="nav-btn">👥 Klientai</a>
-    <a href="invoices.html" class="nav-btn">📋 Sąskaitos</a>
-    <a href="create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
-    <!-- LOGOUT -->
+    <nav>
+        <a href="../index.html" class="nav-btn">🏠 Pradžia</a>
+        <a href="dashboard.html" class="nav-btn">📊 Dashboard</a>
+        <a href="products.html" class="nav-btn">📦 Produktai</a>
+        <a href="clients.html" class="nav-btn">👥 Klientai</a>
+        <a href="invoices.html" class="nav-btn">📋 Sąskaitos</a>
+        <a href="create-invoice.html" class="nav-btn">➕ Nauja Sąskaita</a>
+        <!-- LOGOUT -->
         <div class="user-info">
-    <a href="../profile.html" class="user-name" 
-       style="cursor: pointer; text-decoration: none; font-weight: bold;">
-    </a>
-    <button id="logout-btn" style="margin-left: 10px; cursor: pointer;">
-        Atsijungti
-    </button>
-</div>
-</nav>
+            <a href="../profile.html" class="user-name"
+                style="cursor: pointer; text-decoration: none; font-weight: bold;">
+            </a>
+            <button id="logout-btn" style="margin-left: 10px; cursor: pointer;">
+                Atsijungti
+            </button>
+        </div>
+    </nav>
 
     <main>
         <h2>Klientų Sąrašas</h2>
-        
+
         <div id="clients-list">
             <p>Kraunama...</p>
         </div>
@@ -43,7 +45,7 @@
         <hr style="margin: 40px 0; border: none; border-top: 2px solid #8B7355;">
 
         <h2>Pridėti Naują Klientą</h2>
-        
+
         <div class="form-container">
             <form id="client-form">
                 <div class="form-group">
@@ -56,7 +58,8 @@
                         <label for="company_code">Įmonės kodas</label>
                         <input type="text" id="company_code" placeholder="Pvz: 111950549">
                         <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
-                            💡 Patikrinti galite čia: <a href="https://www.registrucentras.lt/jar/p/" target="_blank" style="color: #C9941A;">registrucentras.lt</a>
+                            💡 Patikrinti galite čia: <a href="https://www.registrucentras.lt/jar/p/" target="_blank"
+                                style="color: #C9941A;">registrucentras.lt</a>
                         </small>
                     </div>
 
@@ -101,7 +104,8 @@
                 </div>
 
                 <button type="submit" class="btn">Pridėti Klientą</button>
-                <button type="button" class="btn" id="cancel-edit" style="display: none; background: #999;">Atšaukti Redagavimą</button>
+                <button type="button" class="btn" id="cancel-edit" style="display: none; background: #999;">Atšaukti
+                    Redagavimą</button>
             </form>
         </div>
     </main>
@@ -112,25 +116,26 @@
     <script src="../js/config.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
-<!-- AUTHENTICATION CHECK -->
+    <!-- AUTHENTICATION CHECK -->
 
     <script>
-// PROTECT THIS PAGE - require authentication
-(async function() {
-    const isAuth = await AuthService.requireAuth();
-    if (isAuth) {
-        // Update UI with user info
-        AuthService.updateUserUI();
-        
-        // Setup logout button
-        AuthService.setupLogoutButton('#logout-btn');
-    }
-})();
-</script>
+        // PROTECT THIS PAGE - require authentication
+        (async function () {
+            const isAuth = await AuthService.requireAuth();
+            if (isAuth) {
+                // Update UI with user info
+                AuthService.updateUserUI();
+
+                // Setup logout button
+                AuthService.setupLogoutButton('#logout-btn');
+            }
+        })();
+    </script>
     <script src="../js/clients.js"></script>
     <script src="..js/themes.js"></script>
     <script src="../js/dark-mode.js"></script>
-    
-        
+
+
 </body>
+
 </html>
