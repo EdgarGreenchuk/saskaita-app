@@ -9,30 +9,22 @@ let statusChart = null;
 
 async function loadDashboard() {
     try {
-        // Gauti visus duomenis
         const [invoices, clients, products] = await Promise.all([
-            fetch(`${API_URL}/invoices`).then(r => r.json()),
-            fetch(`${API_URL}/clients`).then(r => r.json()),
-            fetch(`${API_URL}/products`).then(r => r.json())
+            API.invoices.getAll(),
+            API.clients.getAll(),
+            API.products.getAll()
         ]);
 
-        // Apskaičiuoti KPI
         calculateKPIs(invoices, clients);
-
-        // Piešti grafikus
         drawSalesChart(invoices);
         drawStatusChart(invoices);
-
-        // Top lists
         displayTopClients(invoices, clients);
         displayTopProducts(invoices, products);
-
-        // Recent activity
         displayRecentActivity(invoices, clients);
 
     } catch (error) {
         console.error('Error loading dashboard:', error);
-        alert('Klaida kraunant dashboard duomenis');
+        alert('Klaida kraunant dashboard duomenis: ' + error.message);
     }
 }
 
@@ -41,20 +33,16 @@ async function loadDashboard() {
 // ========================================
 
 function calculateKPIs(invoices, clients) {
-    // Total revenue
     const totalRevenue = invoices.reduce((sum, inv) => sum + parseFloat(inv.total), 0);
     document.getElementById('total-revenue').textContent = totalRevenue.toFixed(2) + ' €';
 
-    // Unpaid revenue
     const unpaidRevenue = invoices
         .filter(inv => inv.status === 'unpaid' || inv.status === 'overdue')
         .reduce((sum, inv) => sum + parseFloat(inv.total), 0);
     document.getElementById('unpaid-revenue').textContent = unpaidRevenue.toFixed(2) + ' €';
 
-    // Total invoices
     document.getElementById('total-invoices').textContent = invoices.length;
 
-    // Active clients (clients with invoices)
     const activeClientIds = new Set(invoices.map(inv => inv.client_id));
     document.getElementById('total-clients').textContent = activeClientIds.size;
 }
@@ -66,7 +54,6 @@ function calculateKPIs(invoices, clients) {
 function drawSalesChart(invoices) {
     const ctx = document.getElementById('salesChart');
 
-    // Group by month
     const salesByMonth = {};
     invoices.forEach(inv => {
         const date = new Date(inv.invoice_date);
@@ -78,7 +65,6 @@ function drawSalesChart(invoices) {
         salesByMonth[monthKey] += parseFloat(inv.total);
     });
 
-    // Sort by date
     const sortedMonths = Object.keys(salesByMonth).sort();
     const labels = sortedMonths.map(key => {
         const [year, month] = key.split('-');
@@ -86,7 +72,6 @@ function drawSalesChart(invoices) {
     });
     const data = sortedMonths.map(key => salesByMonth[key].toFixed(2));
 
-    // Destroy old chart if exists
     if (salesChart) {
         salesChart.destroy();
     }
@@ -113,9 +98,7 @@ function drawSalesChart(invoices) {
                     display: true,
                     labels: {
                         color: '#2C1810',
-                         font: {
-                        size: 12  
-                    }
+                        font: { size: 12 }
                     }
                 }
             },
@@ -128,17 +111,11 @@ function drawSalesChart(invoices) {
                             return value + ' €';
                         }
                     },
-                    grid: {
-                        color: 'rgba(0,0,0,0.1)'
-                    }
+                    grid: { color: 'rgba(0,0,0,0.1)' }
                 },
                 x: {
-                    ticks: {
-                        color: '#2C1810'
-                    },
-                    grid: {
-                        color: 'rgba(0,0,0,0.1)'
-                    }
+                    ticks: { color: '#2C1810' },
+                    grid: { color: 'rgba(0,0,0,0.1)' }
                 }
             }
         }
@@ -152,12 +129,7 @@ function drawSalesChart(invoices) {
 function drawStatusChart(invoices) {
     const ctx = document.getElementById('statusChart');
 
-    // Count by status
-    const statusCounts = {
-        'paid': 0,
-        'unpaid': 0,
-        'overdue': 0
-    };
+    const statusCounts = { 'paid': 0, 'unpaid': 0, 'overdue': 0 };
 
     invoices.forEach(inv => {
         const status = inv.status || 'unpaid';
@@ -166,7 +138,6 @@ function drawStatusChart(invoices) {
         }
     });
 
-    // Destroy old chart if exists
     if (statusChart) {
         statusChart.destroy();
     }
@@ -177,27 +148,21 @@ function drawStatusChart(invoices) {
             labels: ['Apmokėtos', 'Neapmokėtos', 'Uždeltos'],
             datasets: [{
                 data: [statusCounts.paid, statusCounts.unpaid, statusCounts.overdue],
-                backgroundColor: [
-                    '#38ef7d',
-                    '#C9941A',
-                    '#8B4513'
-                ],
+                backgroundColor: ['#38ef7d', '#C9941A', '#8B4513'],
                 borderWidth: 0
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            aspectRatio:1.3,
+            aspectRatio: 1.3,
             plugins: {
                 legend: {
                     position: 'right',
                     labels: {
                         color: '#2C1810',
                         padding: 15,
-                        font: {
-                        size: 13
-                        }
+                        font: { size: 13 }
                     }
                 }
             }
@@ -210,7 +175,6 @@ function drawStatusChart(invoices) {
 // ========================================
 
 function displayTopClients(invoices, clients) {
-    // Group by client
     const clientTotals = {};
     const clientCounts = {};
 
@@ -224,12 +188,10 @@ function displayTopClients(invoices, clients) {
         clientCounts[clientId]++;
     });
 
-    // Sort and get top 5
     const topClients = Object.entries(clientTotals)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
 
-    // Display
     const container = document.getElementById('top-clients');
     
     if (topClients.length === 0) {
@@ -260,7 +222,6 @@ function displayTopClients(invoices, clients) {
 // ========================================
 
 function displayTopProducts(invoices, products) {
-    // Get all invoice items
     const productCounts = {};
     const productRevenue = {};
 
@@ -268,7 +229,7 @@ function displayTopProducts(invoices, products) {
         if (inv.items && inv.items.length > 0) {
             inv.items.forEach(item => {
                 const productId = item.product_id;
-                if (!productId) return; // Skip manual items
+                if (!productId) return;
 
                 if (!productCounts[productId]) {
                     productCounts[productId] = 0;
@@ -280,12 +241,10 @@ function displayTopProducts(invoices, products) {
         }
     });
 
-    // Sort by revenue and get top 5
     const topProducts = Object.entries(productRevenue)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
 
-    // Display
     const container = document.getElementById('top-products');
     
     if (topProducts.length === 0) {
@@ -316,7 +275,6 @@ function displayTopProducts(invoices, products) {
 // ========================================
 
 function displayRecentActivity(invoices, clients) {
-    // Sort by date (newest first) and get last 10
     const recentInvoices = [...invoices]
         .sort((a, b) => new Date(b.created_at || b.invoice_date) - new Date(a.created_at || a.invoice_date))
         .slice(0, 10);
@@ -381,7 +339,6 @@ function updateChartsForDarkMode() {
     }
 }
 
-// Listen for dark mode changes
 const darkModeObserver = new MutationObserver(() => {
     updateChartsForDarkMode();
 });
@@ -393,7 +350,6 @@ const darkModeObserver = new MutationObserver(() => {
 document.addEventListener('DOMContentLoaded', () => {
     loadDashboard();
 
-    // Watch for dark mode changes
     darkModeObserver.observe(document.body, {
         attributes: true,
         attributeFilter: ['class']

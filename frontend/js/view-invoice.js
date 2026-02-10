@@ -1,12 +1,10 @@
 // const API_URL moved to config.js
 
-// Gauti invoice ID iš URL
 function getInvoiceId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id');
 }
 
-// Krauname sąskaitą
 async function loadInvoice() {
     const invoiceId = getInvoiceId();
     
@@ -16,32 +14,23 @@ async function loadInvoice() {
     }
     
     try {
-        const response = await fetch(`${API_URL}/invoices/${invoiceId}`);
-        
-        if (!response.ok) {
-            throw new Error('Sąskaita nerasta');
-        }
-        
-        const invoice = await response.json();
+        const invoice = await API.invoices.getById(invoiceId);
         displayInvoice(invoice);
     } catch (error) {
         console.error('Klaida kraunant sąskaitą:', error);
-        document.getElementById('invoice-container').innerHTML = '<p style="color: red;">Klaida kraunant sąskaitą</p>';
+        document.getElementById('invoice-container').innerHTML = '<p style="color: red;">Klaida kraunant sąskaitą: ' + error.message + '</p>';
     }
 }
 
-// Rodyti sąskaitą
 function displayInvoice(invoice) {
     const invoiceDate = new Date(invoice.invoice_date).toLocaleDateString('lt-LT');
     const dueDate = new Date(invoice.due_date).toLocaleDateString('lt-LT');
     
-    // Sukurti prekių eilutes
     let itemsHTML = '';
     invoice.items.forEach((item, index) => {
         const lineTotal = parseFloat(item.line_total);
         const price = parseFloat(item.price);
         
-        // Nuolaidos rodymas
         let discountHTML = '-';
         if (item.discount_type === 'fixed' && item.discount_value > 0) {
             discountHTML = `-${parseFloat(item.discount_value).toFixed(2)} €`;
@@ -54,10 +43,9 @@ function displayInvoice(invoice) {
             <tr>
                 <td>${index + 1}</td>
                 <td>
-                ${item.product_name ? `<strong>${item.product_name}</strong><br>` : ''}
-                ${item.description}
+                    ${item.product_name ? `<strong>${item.product_name}</strong><br>` : ''}
+                    ${item.description}
                 </td>
-                
                 <td>${item.quantity}</td>
                 <td>${price.toFixed(2)} €</td>
                 <td>${discountHTML}</td>
@@ -69,7 +57,6 @@ function displayInvoice(invoice) {
     const html = `
         <div class="invoice-document">
             <div class="invoice-header">
-                <div class="invoice-header">
                 <h1><span class="no-print">📊 </span>PVM SĄSKAITA FAKTŪRA</h1>
                 <p>Sąskaitos numeris: <strong>${invoice.invoice_number}</strong></p>
             </div>
@@ -91,7 +78,6 @@ function displayInvoice(invoice) {
                     <p>El. paštas: edgariukui@gmail.com</p>
                     <p>Tel: +370 600 86227</p>
                     <div style="margin-top: 20px; text-align: center;">
-                        <p style="margin-bottom: 5px; font-size: 0.9em; color: #666;"></p>
                         <span class="eg-signature">
                             <span class="eg-signature-text">ЭG</span>
                         </span>
@@ -159,14 +145,11 @@ function displayInvoice(invoice) {
     document.getElementById('invoice-container').innerHTML = html;
 }
 
-// Redaguoti sąskaitą
 function editInvoice() {
     const invoiceId = getInvoiceId();
     window.location.href = `edit-invoice.html?id=${invoiceId}`;
 }
 
-
-// Trinti sąskaitą
 async function deleteInvoice() {
     const invoiceId = getInvoiceId();
     
@@ -175,32 +158,24 @@ async function deleteInvoice() {
     }
     
     try {
-        const response = await fetch(`${API_URL}/invoices/${invoiceId}`, {
-            method: 'DELETE'
-        });
-        
-        if (response.ok) {
-            alert('✅ Sąskaita ištrinta!');
-            window.location.href = 'invoices.html';
-        } else {
-            alert('❌ Klaida trinant sąskaitą');
-        }
+        await API.invoices.delete(invoiceId);
+        alert('✅ Sąskaita ištrinta sėkmingai!');
+        window.location.href = 'invoices.html';
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('❌ Klaida trinant sąskaitą');
+        console.error('Klaida trinant sąskaitą:', error);
+        alert('❌ Nepavyko ištrinti sąskaitos: ' + error.message);
     }
 }
 
-// Kopijuoti viešą nuorodą
 function copyPublicLink() {
     const invoiceId = getInvoiceId();
     const publicUrl = `${window.location.origin}/pages/public-invoice.html?id=${invoiceId}`;
     
     navigator.clipboard.writeText(publicUrl).then(() => {
-        alert('✅ Nuoroda nukopijuota! Dabar galite ją išsiųsti klientui.');
+        alert('✅ Nuoroda nukopijuota!');
     }).catch(() => {
         prompt('Nukopijuokite šią nuorodą:', publicUrl);
     });
 }
-// Krauname kai puslapis užsikrauna
+
 document.addEventListener('DOMContentLoaded', loadInvoice);

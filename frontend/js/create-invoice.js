@@ -24,7 +24,6 @@ function closeModals() {
     document.getElementById('add-product-modal').classList.remove('active');
 }
 
-// Refresh product dropdowns in all item rows
 function refreshProductDropdowns() {
     let productOptions = '<option value="">-- Pasirinkite produktą arba įrašykite rankiniu būdu --</option>';
     products.forEach(product => {
@@ -34,7 +33,7 @@ function refreshProductDropdowns() {
     document.querySelectorAll('.product-select').forEach(select => {
         const currentValue = select.value;
         select.innerHTML = productOptions;
-        select.value = currentValue; // Restore previous selection
+        select.value = currentValue;
     });
 }
 
@@ -42,31 +41,25 @@ function refreshProductDropdowns() {
 // INITIALIZATION
 // ========================================
 
-// Inicializavimas
 document.addEventListener('DOMContentLoaded', async () => {
-    // Nustatyti šiandienos datą
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('invoice_date').value = today;
 
-    // Nustatyti mokėjimo terminą (14 dienų)
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 14);
     document.getElementById('due_date').value = dueDate.toISOString().split('T')[0];
 
-    // Krauname duomenis
     await loadClients();
     await loadProducts();
 
-    // Pridėti pirmą prekės eilutę
     addItemRow();
 
-    // Event listeners
     document.getElementById('add-item-btn').addEventListener('click', addItemRow);
     document.getElementById('invoice-form').addEventListener('submit', createInvoice);
     document.getElementById('client_id').addEventListener('change', showClientDetails);
     document.getElementById('shipping_price').addEventListener('input', calculateTotals);
 
-    // Quick Add Client Form
+    // Quick Add Client
     document.getElementById('quick-add-client-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -83,37 +76,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/clients`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(clientData)
-            });
-
-            if (response.ok) {
-                const newClient = await response.json();
-
-                // Refresh clients list
-                await loadClients();
-
-                // Select the new client
-                document.getElementById('client_id').value = newClient.id;
-                showClientDetails();
-
-                // Close modal and reset form
-                closeModals();
-                document.getElementById('quick-add-client-form').reset();
-
-                alert('✅ Klientas pridėtas!');
-            } else {
-                alert('❌ Klaida pridedant klientą');
-            }
+            const newClient = await API.clients.create(clientData);
+            await loadClients();
+            document.getElementById('client_id').value = newClient.id;
+            showClientDetails();
+            closeModals();
+            document.getElementById('quick-add-client-form').reset();
+            alert('✅ Klientas pridėtas!');
         } catch (error) {
             console.error('Klaida:', error);
-            alert('❌ Klaida pridedant klientą');
+            alert('❌ Nepavyko pridėti kliento: ' + error.message);
         }
     });
 
-    // Quick Add Product Form
+    // Quick Add Product
     document.getElementById('quick-add-product-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -125,41 +101,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/products`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
-
-            if (response.ok) {
-                const newProduct = await response.json();
-
-                // Refresh products list
-                await loadProducts();
-
-                // Refresh all product dropdowns in items
-                refreshProductDropdowns();
-
-                // Close modal and reset form
-                closeModals();
-                document.getElementById('quick-add-product-form').reset();
-
-                alert('✅ Produktas pridėtas!');
-            } else {
-                alert('❌ Klaida pridedant produktą');
-            }
+            await API.products.create(productData);
+            await loadProducts();
+            refreshProductDropdowns();
+            closeModals();
+            document.getElementById('quick-add-product-form').reset();
+            alert('✅ Produktas pridėtas!');
         } catch (error) {
             console.error('Klaida:', error);
-            alert('❌ Klaida pridedant produktą');
+            alert('❌ Nepavyko pridėti produkto: ' + error.message);
         }
     });
 });
 
-// Krauname klientus
+// ========================================
+// LOAD DATA
+// ========================================
+
 async function loadClients() {
     try {
-        const response = await fetch(`${API_URL}/clients`);
-        clients = await response.json();
+        clients = await API.clients.getAll();
 
         const select = document.getElementById('client_id');
         select.innerHTML = '<option value="">-- Pasirinkite klientą --</option>';
@@ -174,17 +135,18 @@ async function loadClients() {
     }
 }
 
-// Krauname produktus
 async function loadProducts() {
     try {
-        const response = await fetch(`${API_URL}/products`);
-        products = await response.json();
+        products = await API.products.getAll();
     } catch (error) {
         console.error('Klaida kraunant produktus:', error);
     }
 }
 
-// Rodyti kliento detales
+// ========================================
+// CLIENT DETAILS
+// ========================================
+
 function showClientDetails() {
     const clientId = document.getElementById('client_id').value;
     const clientDetails = document.getElementById('client-details');
@@ -205,7 +167,10 @@ function showClientDetails() {
     }
 }
 
-// Pridėti prekės eilutę
+// ========================================
+// ITEM MANAGEMENT
+// ========================================
+
 function addItemRow() {
     itemCounter++;
     const container = document.getElementById('items-container');
@@ -214,7 +179,6 @@ function addItemRow() {
     itemRow.className = 'item-row';
     itemRow.id = `item-${itemCounter}`;
 
-    // Produktų dropdown options
     let productOptions = '<option value="">-- Pasirinkite produktą arba įrašykite rankiniu būdu --</option>';
     products.forEach(product => {
         productOptions += `<option value="${product.id}" data-price="${product.price}" data-description="${product.description || ''}">${product.name} - ${product.price} €</option>`;
@@ -263,24 +227,23 @@ function addItemRow() {
         </div>
         
         <div class="form-group" style="background: #f8f9fa; padding: 10px; border-radius: 5px;">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-        <span>Suma be PVM:</span>
-        <strong><span class="item-subtotal" data-item="${itemCounter}">0.00 €</span></strong>
-    </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-        <span>PVM (21%):</span>
-        <strong><span class="item-vat" data-item="${itemCounter}">0.00 €</span></strong>
-    </div>
-    <div style="display: flex; justify-content: space-between; border-top: 2px solid #dee2e6; padding-top: 5px;">
-        <span style="font-size: 1.1em;">Viso su PVM:</span>
-        <strong style="font-size: 1.1em; color: #11998e;"><span class="item-total" data-item="${itemCounter}">0.00 €</span></strong>
-    </div>
-</div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>Suma be PVM:</span>
+                <strong><span class="item-subtotal" data-item="${itemCounter}">0.00 €</span></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>PVM (21%):</span>
+                <strong><span class="item-vat" data-item="${itemCounter}">0.00 €</span></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-top: 2px solid #dee2e6; padding-top: 5px;">
+                <span style="font-size: 1.1em;">Viso su PVM:</span>
+                <strong style="font-size: 1.1em; color: #11998e;"><span class="item-total" data-item="${itemCounter}">0.00 €</span></strong>
+            </div>
+        </div>
     `;
 
     container.appendChild(itemRow);
 
-    // Event listeners
     const productSelect = itemRow.querySelector('.product-select');
     productSelect.addEventListener('change', (e) => fillProductData(e.target));
 
@@ -291,7 +254,6 @@ function addItemRow() {
     });
 }
 
-// Užpildyti produkto duomenis
 function fillProductData(select) {
     const itemId = select.dataset.item;
     const selectedOption = select.options[select.selectedIndex];
@@ -307,7 +269,6 @@ function fillProductData(select) {
     }
 }
 
-// Pašalinti prekę
 function removeItem(itemId) {
     const item = document.getElementById(`item-${itemId}`);
     if (item) {
@@ -316,7 +277,10 @@ function removeItem(itemId) {
     }
 }
 
-// Apskaičiuoti sumas
+// ========================================
+// CALCULATIONS
+// ========================================
+
 function calculateTotals() {
     let subtotal = 0;
     
@@ -328,7 +292,6 @@ function calculateTotals() {
         
         let itemSubtotal = quantity * price;
         
-        // Atimti nuolaidą
         if (discountType === 'fixed') {
             itemSubtotal -= discountValue;
         } else if (discountType === 'percent') {
@@ -337,13 +300,11 @@ function calculateTotals() {
         
         itemSubtotal = Math.max(0, itemSubtotal);
         
-        // Apskaičiuoti PVM prekei
         const itemVat = itemSubtotal * 0.21;
         const itemTotal = itemSubtotal + itemVat;
         
         const itemId = row.querySelector('.item-quantity').dataset.item;
         
-        // Atnaujinti prekės eilutės sumas
         const subtotalElement = row.querySelector(`.item-subtotal[data-item="${itemId}"]`);
         const vatElement = row.querySelector(`.item-vat[data-item="${itemId}"]`);
         const totalElement = row.querySelector(`.item-total[data-item="${itemId}"]`);
@@ -366,11 +327,13 @@ function calculateTotals() {
     document.getElementById('total-display').textContent = total.toFixed(2) + ' €';
 }
 
-// Sukurti sąskaitą
+// ========================================
+// CREATE INVOICE
+// ========================================
+
 async function createInvoice(e) {
     e.preventDefault();
 
-    // Surinkti duomenis
     const invoiceData = {
         invoice_number: document.getElementById('invoice_number').value,
         client_id: parseInt(document.getElementById('client_id').value),
@@ -380,7 +343,6 @@ async function createInvoice(e) {
         items: []
     };
 
-    // Surinkti prekių duomenis
     document.querySelectorAll('.item-row').forEach(row => {
         const productSelect = row.querySelector('.product-select');
         const item = {
@@ -394,23 +356,12 @@ async function createInvoice(e) {
         invoiceData.items.push(item);
     });
 
-    // Siųsti į API
     try {
-        const response = await fetch(`${API_URL}/invoices`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(invoiceData)
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            alert(`✅ Sąskaita sukurta! Numeris: ${result.invoice_number}`);
-            window.location.href = 'invoices.html';
-        } else {
-            alert('❌ Klaida kuriant sąskaitą');
-        }
+        const result = await API.invoices.create(invoiceData);
+        alert(`✅ Sąskaita sukurta! Numeris: ${result.invoice_number}`);
+        window.location.href = 'invoices.html';
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('❌ Klaida kuriant sąskaitą');
+        console.error('Klaida kuriant sąskaitą:', error);
+        alert('❌ Nepavyko sukurti sąskaitos: ' + error.message);
     }
 }

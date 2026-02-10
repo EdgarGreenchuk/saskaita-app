@@ -1,13 +1,12 @@
 // const API_URL moved to config.js
 
-
 let itemCounter = 0;
 let clients = [];
 let products = [];
 let invoiceId = null;
 
 // ========================================
-// MODAL FUNCTIONS (tas pats kaip create)
+// MODAL FUNCTIONS
 // ========================================
 
 function openAddClientModal() {
@@ -45,10 +44,6 @@ function cancelEdit() {
     }
 }
 
-// ========================================
-// GAUTI INVOICE ID IŠ URL
-// ========================================
-
 function getInvoiceId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id');
@@ -67,18 +62,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
     
-    // Krauname duomenis
     await loadClients();
     await loadProducts();
     await loadInvoice();
     
-    // Event listeners
     document.getElementById('add-item-btn').addEventListener('click', addItemRow);
     document.getElementById('invoice-form').addEventListener('submit', updateInvoice);
     document.getElementById('client_id').addEventListener('change', showClientDetails);
     document.getElementById('shipping_price').addEventListener('input', calculateTotals);
     
-    // Quick Add Client Form
+    // Quick Add Client
     document.getElementById('quick-add-client-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -95,30 +88,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         
         try {
-            const response = await fetch(`${API_URL}/clients`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(clientData)
-            });
-            
-            if (response.ok) {
-                const newClient = await response.json();
-                await loadClients();
-                document.getElementById('client_id').value = newClient.id;
-                showClientDetails();
-                closeModals();
-                document.getElementById('quick-add-client-form').reset();
-                alert('✅ Klientas pridėtas!');
-            } else {
-                alert('❌ Klaida pridedant klientą');
-            }
+            const newClient = await API.clients.create(clientData);
+            await loadClients();
+            document.getElementById('client_id').value = newClient.id;
+            showClientDetails();
+            closeModals();
+            document.getElementById('quick-add-client-form').reset();
+            alert('✅ Klientas pridėtas!');
         } catch (error) {
             console.error('Klaida:', error);
-            alert('❌ Klaida pridedant klientą');
+            alert('❌ Nepavyko pridėti kliento: ' + error.message);
         }
     });
     
-    // Quick Add Product Form
+    // Quick Add Product
     document.getElementById('quick-add-product-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -130,81 +113,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         
         try {
-            const response = await fetch(`${API_URL}/products`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
-            
-            if (response.ok) {
-                const newProduct = await response.json();
-                await loadProducts();
-                refreshProductDropdowns();
-                closeModals();
-                document.getElementById('quick-add-product-form').reset();
-                alert('✅ Produktas pridėtas!');
-            } else {
-                alert('❌ Klaida pridedant produktą');
-            }
+            await API.products.create(productData);
+            await loadProducts();
+            refreshProductDropdowns();
+            closeModals();
+            document.getElementById('quick-add-product-form').reset();
+            alert('✅ Produktas pridėtas!');
         } catch (error) {
             console.error('Klaida:', error);
-            alert('❌ Klaida pridedant produktą');
+            alert('❌ Nepavyko pridėti produkto: ' + error.message);
         }
     });
 });
 
 // ========================================
-// LOAD INVOICE DATA
+// LOAD DATA
 // ========================================
 
 async function loadInvoice() {
     try {
-        const response = await fetch(`${API_URL}/invoices/${invoiceId}`);
+        const invoice = await API.invoices.getById(invoiceId);
         
-        if (!response.ok) {
-            throw new Error('Sąskaita nerasta');
-        }
-        
-        const invoice = await response.json();
-        
-        // Užpildyti pagrindinę informaciją
         document.getElementById('invoice_number').value = invoice.invoice_number;
         document.getElementById('invoice_date').value = invoice.invoice_date;
         document.getElementById('due_date').value = invoice.due_date;
         document.getElementById('shipping_price').value = invoice.shipping_price || 0;
         document.getElementById('status').value = invoice.status || 'unpaid';
         
-        // Pasirinkti klientą
         document.getElementById('client_id').value = invoice.client_id;
         showClientDetails();
         
-        // Užkrauti prekių eilutes
         if (invoice.items && invoice.items.length > 0) {
-            invoice.items.forEach(item => {
-                addItemRow(item);
-            });
+            invoice.items.forEach(item => addItemRow(item));
         } else {
-            addItemRow(); // Bent viena tuščia eilutė
+            addItemRow();
         }
         
         calculateTotals();
         
-        // Rodyti formą, paslėpti loading
         document.getElementById('loading').style.display = 'none';
         document.getElementById('invoice-form').style.display = 'block';
         
     } catch (error) {
         console.error('Klaida kraunant sąskaitą:', error);
-        alert('❌ Klaida kraunant sąskaitą');
+        alert('❌ Klaida kraunant sąskaitą: ' + error.message);
         window.location.href = 'invoices.html';
     }
 }
 
-// Krauname klientus
 async function loadClients() {
     try {
-        const response = await fetch(`${API_URL}/clients`);
-        clients = await response.json();
+        clients = await API.clients.getAll();
         
         const select = document.getElementById('client_id');
         select.innerHTML = '<option value="">-- Pasirinkite klientą --</option>';
@@ -219,17 +178,18 @@ async function loadClients() {
     }
 }
 
-// Krauname produktus
 async function loadProducts() {
     try {
-        const response = await fetch(`${API_URL}/products`);
-        products = await response.json();
+        products = await API.products.getAll();
     } catch (error) {
         console.error('Klaida kraunant produktus:', error);
     }
 }
 
-// Rodyti kliento detales
+// ========================================
+// CLIENT DETAILS
+// ========================================
+
 function showClientDetails() {
     const clientId = document.getElementById('client_id').value;
     const clientDetails = document.getElementById('client-details');
@@ -254,7 +214,6 @@ function showClientDetails() {
 // ITEM MANAGEMENT
 // ========================================
 
-// Pridėti prekės eilutę (su galimybe užpildyti esamais duomenimis)
 function addItemRow(itemData = null) {
     itemCounter++;
     const container = document.getElementById('items-container');
@@ -263,7 +222,6 @@ function addItemRow(itemData = null) {
     itemRow.className = 'item-row';
     itemRow.id = `item-${itemCounter}`;
     
-    // Produktų dropdown options
     let productOptions = '<option value="">-- Pasirinkite produktą arba įrašykite rankiniu būdu --</option>';
     products.forEach(product => {
         const selected = itemData && itemData.product_id == product.id ? 'selected' : '';
@@ -319,7 +277,6 @@ function addItemRow(itemData = null) {
     
     container.appendChild(itemRow);
     
-    // Event listeners
     const productSelect = itemRow.querySelector('.product-select');
     productSelect.addEventListener('change', (e) => fillProductData(e.target));
     
@@ -330,7 +287,6 @@ function addItemRow(itemData = null) {
     });
 }
 
-// Užpildyti produkto duomenis
 function fillProductData(select) {
     const itemId = select.dataset.item;
     const selectedOption = select.options[select.selectedIndex];
@@ -346,7 +302,6 @@ function fillProductData(select) {
     }
 }
 
-// Pašalinti prekę
 function removeItem(itemId) {
     const item = document.getElementById(`item-${itemId}`);
     if (item) {
@@ -355,7 +310,10 @@ function removeItem(itemId) {
     }
 }
 
-// Apskaičiuoti sumas
+// ========================================
+// CALCULATIONS
+// ========================================
+
 function calculateTotals() {
     let subtotal = 0;
     
@@ -367,7 +325,6 @@ function calculateTotals() {
         
         let itemSubtotal = quantity * price;
         
-        // Atimti nuolaidą
         if (discountType === 'fixed') {
             itemSubtotal -= discountValue;
         } else if (discountType === 'percent') {
@@ -376,13 +333,11 @@ function calculateTotals() {
         
         itemSubtotal = Math.max(0, itemSubtotal);
         
-        // Apskaičiuoti PVM prekei
         const itemVat = itemSubtotal * 0.21;
         const itemTotal = itemSubtotal + itemVat;
         
         const itemId = row.querySelector('.item-quantity').dataset.item;
         
-        // Atnaujinti prekės eilutės sumas
         const subtotalElement = row.querySelector(`.item-subtotal[data-item="${itemId}"]`);
         const vatElement = row.querySelector(`.item-vat[data-item="${itemId}"]`);
         const totalElement = row.querySelector(`.item-total[data-item="${itemId}"]`);
@@ -436,20 +391,11 @@ async function updateInvoice(e) {
     });
     
     try {
-        const response = await fetch(`${API_URL}/invoices/${invoiceId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(invoiceData)
-        });
-        
-        if (response.ok) {
-            alert(`✅ Sąskaita atnaujinta!`);
-            window.location.href = `view-invoice.html?id=${invoiceId}`;
-        } else {
-            alert('❌ Klaida atnaujinant sąskaitą');
-        }
+        await API.invoices.update(invoiceId, invoiceData);
+        alert('✅ Sąskaita atnaujinta sėkmingai!');
+        window.location.href = `view-invoice.html?id=${invoiceId}`;
     } catch (error) {
-        console.error('Klaida:', error);
-        alert('❌ Klaida atnaujinant sąskaitą');
+        console.error('Klaida atnaujinant sąskaitą:', error);
+        alert('❌ Nepavyko atnaujinti sąskaitos: ' + error.message);
     }
 }
